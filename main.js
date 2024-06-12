@@ -10,11 +10,15 @@ class WorkTrackerApp extends LitElement {
       padding: 16px;
       font-family: Arial, sans-serif;
     }
+    .user-input {
+      margin-bottom: 16px;
+    }
   `;
 
   static properties = {
     year: { type: Number },
-    month: { type: Number }
+    month: { type: Number },
+    userName: { type: String }
   };
 
   constructor() {
@@ -22,6 +26,7 @@ class WorkTrackerApp extends LitElement {
     const today = new Date();
     this.year = today.getFullYear();
     this.month = today.getMonth();
+    this.userName = localStorage.getItem('userName') || 'Trabajador';
   }
 
   handleMonthChange(event) {
@@ -29,11 +34,20 @@ class WorkTrackerApp extends LitElement {
     this.month = event.detail.month;
   }
 
+  handleUserNameChange(event) {
+    this.userName = event.target.value;
+    localStorage.setItem('userName', this.userName);
+  }
+
   render() {
     return html`
       <h1>Work Tracker</h1>
+      <div class="user-input">
+        <label for="userName">Trabajador: </label>
+        <input type="text" id="userName" .value="${this.userName}" @input="${this.handleUserNameChange}" />
+      </div>
       <calendar-view .year="${this.year}" .month="${this.month}" @month-changed="${this.handleMonthChange}"></calendar-view>
-      <export-excel .year="${this.year}" .month="${this.month}"></export-excel>
+      <export-excel .year="${this.year}" .month="${this.month}" .userName="${this.userName}"></export-excel>
     `;
   }
 }

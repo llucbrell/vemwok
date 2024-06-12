@@ -3,7 +3,8 @@ import { LitElement, html, css } from 'https://unpkg.com/lit@2.0.0?module';
 class ExportExcel extends LitElement {
   static properties = {
     year: { type: Number },
-    month: { type: Number }
+    month: { type: Number },
+    userName: { type: String }
   };
 
   static styles = css`
@@ -45,6 +46,9 @@ class ExportExcel extends LitElement {
     const worksheet = window.XLSX.utils.json_to_sheet(data);
     const workbook = window.XLSX.utils.book_new();
     window.XLSX.utils.book_append_sheet(workbook, worksheet, 'Work Data');
+
+    // Añadir nombre del usuario en la parte superior
+    const sheetData = window.XLSX.utils.sheet_add_json(worksheet, [{ A: `Trabajador: ${this.userName}` }], { skipHeader: true, origin: 'A1' });
 
     window.XLSX.writeFile(workbook, `WorkData_${this.year}_${this.month + 1}.xlsx`);
   }
