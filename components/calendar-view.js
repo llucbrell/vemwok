@@ -15,6 +15,7 @@ class CalendarView extends LitElement {
       border: 1px solid #ccc;
       padding: 10px;
       position: relative;
+      font-size: 0.9em;
     }
     .day-header {
       font-weight: bold;
@@ -38,6 +39,79 @@ class CalendarView extends LitElement {
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    /* Estilos responsivos */
+    @media (max-width: 900px) {
+      .calendar {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+      }
+      .day {
+        padding: 5px;
+        font-size: 0.8em;
+      }
+      .add-button {
+        top: 2px;
+        right: 2px;
+        font-size: 0.8em;
+      }
+      .nav-button {
+        margin: 5px;
+        padding: 3px 5px;
+        font-size: 0.8em;
+      }
+      .header h2 {
+        font-size: 1em;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .calendar {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+      }
+      .day {
+        padding: 5px;
+        font-size: 0.7em;
+      }
+      .add-button {
+        top: 2px;
+        right: 2px;
+        font-size: 0.7em;
+      }
+      .nav-button {
+        margin: 5px;
+        padding: 3px 5px;
+        font-size: 0.7em;
+      }
+      .header h2 {
+        font-size: 0.9em;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .calendar {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3px;
+      }
+      .day {
+        padding: 3px;
+        font-size: 0.6em;
+      }
+      .add-button {
+        top: 1px;
+        right: 1px;
+        font-size: 0.6em;
+      }
+      .nav-button {
+        margin: 3px;
+        padding: 2px 4px;
+        font-size: 0.6em;
+      }
+      .header h2 {
+        font-size: 0.8em;
+      }
     }
   `;
 

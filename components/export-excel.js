@@ -25,10 +25,10 @@ class ExportExcel extends LitElement {
       if (entryYear === this.year && entryMonth === this.month + 1) {
         for (const task of tasks) {
           data.push({
-            Day: key,
-            Task: task.task,
-            Kilometers: task.kilometers,
-            Hours: task.hours
+            Día: key,
+            Tarea: task.task,
+            Kilometros: task.kilometers,
+            Horas: task.hours
           });
           totalKilometers += Number(task.kilometers);
           totalHours += Number(task.hours);
@@ -37,10 +37,10 @@ class ExportExcel extends LitElement {
     }
 
     data.push({
-      Day: 'Total',
-      Task: '',
-      Kilometers: totalKilometers,
-      Hours: totalHours
+      Día: 'Total',
+      Tarea: '',
+      Kilometros: totalKilometers,
+      Horas: totalHours
     });
 
     const worksheet = window.XLSX.utils.json_to_sheet(data);
@@ -55,7 +55,7 @@ class ExportExcel extends LitElement {
 
   render() {
     return html`
-      <button @click="${this.exportToExcel}">Export to Excel</button>
+      <button @click="${this.exportToExcel}">A CSV</button>
     `;
   }
 }

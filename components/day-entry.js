@@ -26,6 +26,21 @@ class DayEntry extends LitElement {
       padding: 5px;
       cursor: pointer;
     }
+
+    /* Estilos responsivos */
+    @media (max-width: 600px) {
+      .entry {
+        font-size: 0.8em;
+      }
+      .entry input {
+        margin-bottom: 3px;
+        padding: 3px;
+      }
+      .delete-button {
+        padding: 3px;
+        font-size: 0.8em;
+      }
+    }
   `;
 
   constructor() {
@@ -73,14 +88,14 @@ class DayEntry extends LitElement {
           .value="${this.entry.task || ''}"
           @input="${this.handleInputChange}"
         />
-        <input
+        Kms:<input
           type="number"
           name="kilometers"
           placeholder="Kilometers"
           .value="${this.entry.kilometers || 0}"
           @input="${this.handleInputChange}"
         />
-        <input
+        Hrs:<input
           type="number"
           name="hours"
           placeholder="Hours"

@@ -46,8 +46,8 @@ class WorkTrackerApp extends LitElement {
         <label for="userName">Trabajador: </label>
         <input type="text" id="userName" .value="${this.userName}" @input="${this.handleUserNameChange}" />
       </div>
-      <calendar-view .year="${this.year}" .month="${this.month}" @month-changed="${this.handleMonthChange}"></calendar-view>
       <export-excel .year="${this.year}" .month="${this.month}" .userName="${this.userName}"></export-excel>
+      <calendar-view .year="${this.year}" .month="${this.month}" @month-changed="${this.handleMonthChange}"></calendar-view>
     `;
   }
 }
