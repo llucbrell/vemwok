@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Trabajo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Registro de Trabajo Mensual</h1>
+        <div id="calendar"></div>
+        <button id="exportBtn">Exportar a Excel</button>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Agregar Faena</h2>
+            <form id="faenaForm">
+                <label for="fecha">Fecha:</label>
+                <input type="date" id="fecha" name="fecha" required>
+                <label for="faena">Faena:</label>
+                <input type="text" id="faena" name="faena" required>
+                <label for="kilometros">Kilómetros:</label>
+                <input type="number" id="kilometros" name="kilometros" required>
+                <label for="horas">Horas:</label>
+                <input type="number" id="horas" name="horas" required>
+                <button type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
