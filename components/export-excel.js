@@ -25,10 +25,12 @@ class ExportExcel extends LitElement {
       if (entryYear === this.year && entryMonth === this.month + 1) {
         for (const task of tasks) {
           data.push({
-            Día: key,
-            Tarea: task.task,
-            Kilometros: task.kilometers,
-            Horas: task.hours
+            Day: key,
+            Task: task.task,
+            Kilometers: task.kilometers,
+            'Hora de salida': task.horaSalida,
+            'Hora de llegada': task.horaLlegada,
+            Hours: task.hours
           });
           totalKilometers += Number(task.kilometers);
           totalHours += Number(task.hours);
@@ -37,10 +39,12 @@ class ExportExcel extends LitElement {
     }
 
     data.push({
-      Día: 'Total',
-      Tarea: '',
-      Kilometros: totalKilometers,
-      Horas: totalHours
+      Day: 'Total',
+      Task: '',
+      Kilometers: totalKilometers,
+      'Hora de salida': '',
+      'Hora de llegada': '',
+      Hours: totalHours
     });
 
     const worksheet = window.XLSX.utils.json_to_sheet(data);
@@ -48,14 +52,14 @@ class ExportExcel extends LitElement {
     window.XLSX.utils.book_append_sheet(workbook, worksheet, 'Work Data');
 
     // Añadir nombre del usuario en la parte superior
-    const sheetData = window.XLSX.utils.sheet_add_json(worksheet, [{ A: `Trabajador: ${this.userName}` }], { skipHeader: true, origin: 'A1' });
+    window.XLSX.utils.sheet_add_aoa(worksheet, [[`Trabajador: ${this.userName}`]], { origin: 'A1' });
 
     window.XLSX.writeFile(workbook, `WorkData_${this.year}_${this.month + 1}.xlsx`);
   }
 
   render() {
     return html`
-      <button @click="${this.exportToExcel}">A CSV</button>
+      <button @click="${this.exportToExcel}">Export to Excel</button>
     `;
   }
 }

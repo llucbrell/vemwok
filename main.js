@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'https://unpkg.com/lit@2.0.0?module';
 import './components/calendar-view.js';
 import './components/day-entry.js';
 import './components/export-excel.js';
+import './components/export-pdf.js';
 
 class WorkTrackerApp extends LitElement {
   static styles = css`
@@ -47,6 +48,7 @@ class WorkTrackerApp extends LitElement {
         <input type="text" id="userName" .value="${this.userName}" @input="${this.handleUserNameChange}" />
       </div>
       <export-excel .year="${this.year}" .month="${this.month}" .userName="${this.userName}"></export-excel>
+      <export-pdf .year="${this.year}" .month="${this.month}" .userName="${this.userName}"></export-pdf>  <!-- Añadir el botón del nuevo componente -->
       <calendar-view .year="${this.year}" .month="${this.month}" @month-changed="${this.handleMonthChange}"></calendar-view>
     `;
   }
