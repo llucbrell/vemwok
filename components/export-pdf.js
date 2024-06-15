@@ -22,64 +22,111 @@ class ExportPdf extends LitElement {
     const margin = 10;
     const startX = margin;
     const startY = margin + 20;
-    const lineHeight = 10;
+    const boxWidth = 40;
+    const baseBoxHeight = 20;
+    const pageWidth = doc.internal.pageSize.width;
     const pageHeight = doc.internal.pageSize.height;
 
-    let currentY = startY;
+    let currentX = startX;
+    let currentY = startY + 20;
+    let maxHeightInRow = baseBoxHeight;
 
-    // Añadir nombre del usuario en la parte superior
-    doc.text(`Trabajador: ${this.userName}`, startX, currentY);
-    currentY += lineHeight;
+    const drawHeader = (doc, currentPage) => {
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text("Valenciana de Emergencias (V.E.M.)", startX, startY - 10);
+      doc.text("Trabajador: " + this.userName, startX, startY - 4);
+      doc.text(`Página ${currentPage}`, pageWidth - margin - 20, startY - 10);
+    };
 
-    // Configuración de encabezados de la tabla
-    const headers = ["Day", "Task", "Kilometers", "Hora de salida", "Hora de llegada", "Hours"];
-    const headerXPositions = [startX, 40, 80, 110, 140, 170];
+    const drawDayBox = (doc, day, tasks, currentX, currentY) => {
+      doc.setFontSize(14); // Tamaño más grande para el número del día
+      doc.setFont('helvetica', 'bold');
+      doc.text(day.toString(), currentX + 2, currentY + 8);
+      doc.setFontSize(10);
+      let boxHeight = baseBoxHeight;
+      let taskY = currentY + 12;
+      doc.setFontSize(8);
 
-    // Dibujar encabezados
-    headers.forEach((header, i) => {
-      doc.text(header, headerXPositions[i], currentY);
-    });
-    currentY += lineHeight;
+      tasks.forEach(task => {
+        const taskLines = [
+          `Tarea: ${task.task}`,
+          `Salida: ${task.horaSalida}`,
+          `Llegada: ${task.horaLlegada}`,
+          `Horas: ${task.hours}`,
+          `Km: ${task.kilometers}`
+        ];
 
-    let totalKilometers = 0;
-    let totalHours = 0;
-
-    // Añadir filas de datos
-    for (const [key, tasks] of Object.entries(entries)) {
-      const [entryYear, entryMonth] = key.split('-').map(Number);
-      if (entryYear === this.year && entryMonth === this.month + 1) {
-        tasks.forEach(task => {
-          if (currentY + lineHeight > pageHeight - margin) {
-            doc.addPage();
-            currentY = margin + lineHeight;
+        taskLines.forEach(line => {
+          if (taskY + 4 > currentY + boxHeight) {
+            boxHeight += 10; // Aumentar la altura de la caja
           }
-          const row = [
-            key,
-            task.task,
-            task.kilometers.toString(),
-            task.horaSalida || '',
-            task.horaLlegada || '',
-            task.hours.toString()
-          ];
-          row.forEach((text, i) => {
-            doc.text(text, headerXPositions[i], currentY);
-          });
-          currentY += lineHeight;
-
-          totalKilometers += Number(task.kilometers);
-          totalHours += Number(task.hours);
+          taskY += 4;
         });
+
+        taskY += 2; // Añadir un pequeño margen antes de la línea
+        doc.setDrawColor(150); // Color gris para la línea
+        doc.line(currentX + 2, taskY, currentX + boxWidth - 2, taskY); // Dibujar la línea continua
+        taskY += 4; // Añadir espacio después de la línea
+      });
+
+      doc.rect(currentX, currentY, boxWidth, boxHeight);
+      taskY = currentY + 12;
+      tasks.forEach(task => {
+        doc.setFont('helvetica', 'bold');
+        doc.text(`Tarea: ${task.task}`, currentX + 2, taskY);
+        taskY += 4;
+        doc.setFont('helvetica', 'normal');
+        const taskLines = [
+          `Salida: ${task.horaSalida}`,
+          `Llegada: ${task.horaLlegada}`,
+          `Horas: ${task.hours}`,
+          `Km: ${task.kilometers}`
+        ];
+
+        taskLines.forEach(line => {
+          doc.text(line, currentX + 2, taskY);
+          taskY += 4;
+        });
+
+        taskY += 2; // Añadir un pequeño margen antes de la línea
+        doc.setDrawColor(150); // Color gris para la línea
+        doc.line(currentX + 2, taskY, currentX + boxWidth - 2, taskY); // Dibujar la línea continua
+        taskY += 4; // Añadir espacio después de la línea
+      });
+
+      return boxHeight;
+    };
+
+    let currentPage = 1;
+    drawHeader(doc, currentPage);
+
+    const daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
+    const firstDay = new Date(this.year, this.month, 1).getDay();
+
+    // Dibujar los días del calendario
+    for (let day = 1; day <= daysInMonth; day++) {
+      const key = `${this.year}-${this.month + 1}-${day}`;
+      const tasks = entries[key] || [];
+      const boxHeight = drawDayBox(doc, day, tasks, currentX, currentY);
+      maxHeightInRow = Math.max(maxHeightInRow, boxHeight);
+
+      currentX += boxWidth;
+      if (currentX + boxWidth > pageWidth - margin) {
+        currentX = startX;
+        currentY += maxHeightInRow;
+        maxHeightInRow = baseBoxHeight;
+      }
+
+      if (currentY + maxHeightInRow > pageHeight - margin) {
+        doc.addPage();
+        currentPage += 1;
+        drawHeader(doc, currentPage);
+        currentY = margin + 20;
+        currentX = startX;
+        maxHeightInRow = baseBoxHeight;
       }
     }
-
-    // Añadir fila de totales
-    if (currentY + lineHeight > pageHeight - margin) {
-      doc.addPage();
-      currentY = margin + lineHeight;
-    }
-    doc.text("Total", startX, currentY);
-    doc.text(totalKilometers.toString(), headerXPositions[2], currentY);
-    doc.text(totalHours.toString(), headerXPositions[5], currentY);
 
     // Descargar el PDF
     doc.save(`WorkData_${this.year}_${this.month + 1}.pdf`);
