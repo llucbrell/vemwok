@@ -16,13 +16,19 @@ class ExportExcel extends LitElement {
 
   exportToExcel() {
     const entries = JSON.parse(localStorage.getItem('workEntries')) || {};
-    const data = [];
+    let data = [];
     let totalKilometers = 0;
     let totalMinutes = 0;
+    let totalTasks = 0;
 
     const formatDate = (dateString) => {
       const [year, month, day] = dateString.split('-');
       return `${day}/${month}/${year}`;
+    };
+
+    const parseDate = (dateString) => {
+      const [year, month, day] = dateString.split('-');
+      return new Date(year, month - 1, day);
     };
 
     for (const [key, tasks] of Object.entries(entries)) {
@@ -30,6 +36,7 @@ class ExportExcel extends LitElement {
       if (entryYear === this.year && entryMonth === this.month + 1) {
         for (const task of tasks) {
           data.push({
+            Date: key,
             Día: formatDate(key),
             Tarea: task.task,
             Kilómetros: task.kilometers,
@@ -38,6 +45,7 @@ class ExportExcel extends LitElement {
             Horas: task.hours
           });
           totalKilometers += Number(task.kilometers);
+          totalTasks += 1;
 
           // Convertir horas a minutos y sumar
           if (task.hours && task.hours.includes(':')) {
@@ -50,21 +58,38 @@ class ExportExcel extends LitElement {
       }
     }
 
+    // Ordenar los datos por fecha
+    data = data.sort((a, b) => parseDate(a.Date) - parseDate(b.Date));
+
     // Convertir total de minutos a formato HH:mm
     const totalHours = Math.floor(totalMinutes / 60);
     const remainingMinutes = totalMinutes % 60;
     const totalHoursFormatted = `${totalHours}:${remainingMinutes.toString().padStart(2, '0')}`;
 
+    // Agregar una línea en blanco antes de los totales
+    data.push({
+      Día: '',
+      Tarea: '',
+      Kilómetros: '',
+      'Hora de salida': '',
+      'Hora de llegada': '',
+      Horas: ''
+    });
+
+    // Agregar los totales
     data.push({
       Día: 'Total',
-      Tarea: '',
+      Tarea: `Total de tareas: ${totalTasks}`,
       Kilómetros: totalKilometers,
       'Hora de salida': '',
       'Hora de llegada': '',
       Horas: totalHoursFormatted
     });
 
-    const worksheet = window.XLSX.utils.json_to_sheet(data);
+    // Remover la columna de fechas sin formato antes de crear el worksheet
+    const finalData = data.map(({ Date, ...rest }) => rest);
+
+    const worksheet = window.XLSX.utils.json_to_sheet(finalData);
     const workbook = window.XLSX.utils.book_new();
     window.XLSX.utils.book_append_sheet(workbook, worksheet, 'Work Data');
 
@@ -73,7 +98,7 @@ class ExportExcel extends LitElement {
 
     // Ajustar el tamaño de las celdas
     const wscols = [
-      { wch: 15 }, // Día
+      { wch: 45 }, // Día
       { wch: 20 }, // Tarea
       { wch: 12 }, // Kilómetros
       { wch: 15 }, // Hora de salida
@@ -87,7 +112,7 @@ class ExportExcel extends LitElement {
 
   render() {
     return html`
-      <button @click="${this.exportToExcel}">Export to Excel</button>
+      <button @click="${this.exportToExcel}">Excel</button>
     `;
   }
 }

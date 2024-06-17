@@ -14,6 +14,16 @@ class WorkTrackerApp extends LitElement {
     .user-input {
       margin-bottom: 16px;
     }
+    .export-buttons {
+      display: flex;
+      gap: 10px; /* Espacio entre los botones */
+      margin-bottom: 16px; /* Espacio debajo de los botones */
+    }
+    .export-buttons button {
+      flex: 1; /* Hacer que los botones ocupen el mismo espacio */
+      padding: 10px;
+      font-size: 16px;
+    }
   `;
 
   static properties = {
@@ -47,8 +57,10 @@ class WorkTrackerApp extends LitElement {
         <label for="userName">Trabajador: </label>
         <input type="text" id="userName" .value="${this.userName}" @input="${this.handleUserNameChange}" />
       </div>
-      <export-excel .year="${this.year}" .month="${this.month}" .userName="${this.userName}"></export-excel>
-      <export-pdf .year="${this.year}" .month="${this.month}" .userName="${this.userName}"></export-pdf>  <!-- Añadir el botón del nuevo componente -->
+      <div class="export-buttons">
+        <export-excel .year="${this.year}" .month="${this.month}" .userName="${this.userName}"></export-excel>
+        <export-pdf .year="${this.year}" .month="${this.month}" .userName="${this.userName}"></export-pdf>
+      </div>
       <calendar-view .year="${this.year}" .month="${this.month}" @month-changed="${this.handleMonthChange}"></calendar-view>
     `;
   }

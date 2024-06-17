@@ -54,7 +54,7 @@ class ExportPdf extends LitElement {
           `Salida: ${task.horaSalida}`,
           `Llegada: ${task.horaLlegada}`,
           `Horas: ${task.hours}`,
-          `Km: ${task.kilometers}`
+          `Kms: ${task.kilometers}`
         ];
 
         taskLines.forEach(line => {
@@ -81,7 +81,7 @@ class ExportPdf extends LitElement {
           `Salida: ${task.horaSalida}`,
           `Llegada: ${task.horaLlegada}`,
           `Horas: ${task.hours}`,
-          `Km: ${task.kilometers}`
+          `Kms: ${task.kilometers}`
         ];
 
         taskLines.forEach(line => {
@@ -134,7 +134,7 @@ class ExportPdf extends LitElement {
 
   render() {
     return html`
-      <button @click="${this.generatePdf}">Export to PDF</button>
+      <button @click="${this.generatePdf}">PDF</button>
     `;
   }
 }

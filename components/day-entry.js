@@ -107,42 +107,43 @@ class DayEntry extends LitElement {
   render() {
     return html`
       <div class="entry">
+      Tarea:
         <input
           type="text"
           name="task"
           placeholder="Task"
           .value="${this.entry.task || ''}"
           @input="${this.handleInputChange}"
-        />
-        <input
-          type="number"
-          name="kilometers"
-          placeholder="Kilometers"
-          .value="${this.entry.kilometers || 0}"
-          @input="${this.handleInputChange}"
-        />
-        <input
+        /> 
+        Salida:<input
           type="time"
           name="horaSalida"
           placeholder="Hora de salida"
           .value="${this.entry.horaSalida || ''}"
           @input="${this.handleInputChange}"
         />
-        <input
+        Llegada:<input
           type="time"
           name="horaLlegada"
           placeholder="Hora de llegada"
           .value="${this.entry.horaLlegada || ''}"
           @input="${this.handleInputChange}"
         />
-        <input
+        Hrs:<input
           type="text"
           name="hours"
-          placeholder="Hours"
+          placeholder="Horas"
           .value="${this.entry.hours || '0:00'}"
           readonly
         />
-        <button class="delete-button" @click="${this.deleteEntry}">Delete</button>
+        Kms:<input
+          type="number"
+          name="kilometers"
+          placeholder="Kilometers"
+          .value="${this.entry.kilometers || 0}"
+          @input="${this.handleInputChange}"
+        />
+        <button class="delete-button" @click="${this.deleteEntry}">Borrar</button>
       </div>
     `;
   }
