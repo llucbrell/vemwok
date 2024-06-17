@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'https://unpkg.com/lit@2.0.0?module';
+import { parseISO, format, differenceInMinutes } from 'https://unpkg.com/date-fns@2.22.1/esm/index.js';
 
 class DayEntry extends LitElement {
   static properties = {
@@ -59,24 +60,25 @@ class DayEntry extends LitElement {
 
   calculateHours() {
     if (this.entry.horaSalida && this.entry.horaLlegada) {
-      const [salidaHoras, salidaMinutos] = this.entry.horaSalida.split(':').map(Number);
-      const [llegadaHoras, llegadaMinutos] = this.entry.horaLlegada.split(':').map(Number);
-      const salida = new Date(0, 0, 0, salidaHoras, salidaMinutos);
-      const llegada = new Date(0, 0, 0, llegadaHoras, llegadaMinutos);
-      let diff = (llegada - salida) / 1000 / 60 / 60;
-      if (diff < 0) diff += 24;
-      this.entry.hours = diff.toFixed(2);
+      const formatStr = 'HH:mm';
+      const salida = parseISO(`1970-01-01T${this.entry.horaSalida}:00`);
+      const llegada = parseISO(`1970-01-01T${this.entry.horaLlegada}:00`);
+      let diff = differenceInMinutes(llegada, salida);
+      if (diff < 0) diff += 1440; // Handle overnight shifts
+
+      const hours = Math.floor(diff / 60);
+      const minutes = diff % 60;
+      this.entry.hours = `${hours}:${minutes.toString().padStart(2, '0')}`;
     }
   }
 
-handleHoursChange(e) {
-  const { name, value } = e.target;
-  if (!this.entry.horaSalida && !this.entry.horaLlegada) {
-    this.entry[name] = value;
-    this.saveEntry();
+  handleHoursChange(e) {
+    const { name, value } = e.target;
+    if (!this.entry.horaSalida && !this.entry.horaLlegada) {
+      this.entry[name] = value;
+      this.saveEntry();
+    }
   }
-}
- 
 
   saveEntry() {
     const entries = JSON.parse(localStorage.getItem('workEntries')) || {};
@@ -134,11 +136,11 @@ handleHoursChange(e) {
           @input="${this.handleInputChange}"
         />
         <input
-          type="number"
+          type="text"
           name="hours"
           placeholder="Hours"
-          .value="${this.entry.hours || 0}"
-          @input="${this.handleHoursChange}"
+          .value="${this.entry.hours || '0:00'}"
+          readonly
         />
         <button class="delete-button" @click="${this.deleteEntry}">Delete</button>
       </div>
