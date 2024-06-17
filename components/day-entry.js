@@ -90,7 +90,9 @@ class DayEntry extends LitElement {
     this.dispatchEvent(new CustomEvent('entries-updated', { bubbles: true, composed: true }));
   }
 
-  deleteEntry() {
+deleteEntry() {
+  // Solicitar confirmación al usuario
+  if (confirm('¿Estás seguro de que deseas eliminar esta entrada?')) {
     const entries = JSON.parse(localStorage.getItem('workEntries')) || {};
     if (entries[this.date]) {
       entries[this.date].splice(this.index, 1);
@@ -103,6 +105,8 @@ class DayEntry extends LitElement {
       this.requestUpdate();
     }
   }
+}
+ 
 
   render() {
     return html`
