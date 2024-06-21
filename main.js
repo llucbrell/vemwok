@@ -55,7 +55,7 @@ class WorkTrackerApp extends LitElement {
     localStorage.setItem('userName', this.userName);
   }
 
-render() {
+  render() {
     return html`
       <div class="header">
         <img src="./favicon.ico" alt="Logo de VemWok">
@@ -75,3 +75,15 @@ render() {
 }
 
 customElements.define('work-tracker-app', WorkTrackerApp);
+
+// Registrar el service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(registration => {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, error => {
+        console.log('ServiceWorker registration failed: ', error);
+      });
+  });
+}
