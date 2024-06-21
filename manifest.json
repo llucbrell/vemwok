@@ -2,7 +2,7 @@
   "name": "VemWok Control",
   "short_name": "VemWok",
   "description": "Aplicación de control de trabajo VemWok",
-  "start_url": "/index.html",
+  "start_url": "/vemwok/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
