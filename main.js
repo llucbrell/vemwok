@@ -24,6 +24,11 @@ class WorkTrackerApp extends LitElement {
       padding: 10px;
       font-size: 16px;
     }
+    .header img {
+      height: 50px; /* Ajustar el tamaño de la imagen */
+      width: auto;
+      float: right;
+    }
   `;
 
   static properties = {
@@ -50,9 +55,12 @@ class WorkTrackerApp extends LitElement {
     localStorage.setItem('userName', this.userName);
   }
 
-  render() {
+render() {
     return html`
-      <h1>Work Tracker</h1>
+      <div class="header">
+        <img src="./favicon.ico" alt="Logo de VemWok">
+        <h1>VemWok</h1>
+      </div>
       <div class="user-input">
         <label for="userName">Trabajador: </label>
         <input type="text" id="userName" .value="${this.userName}" @input="${this.handleUserNameChange}" />
